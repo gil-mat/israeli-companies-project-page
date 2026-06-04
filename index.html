@@ -1,50 +1,1451 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>פרויקט החברות הישראליות</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Companies Project — The AI-Native Network for Global Business</title>
+<meta name="description" content="A new infrastructure layer where companies, AI agents, and business opportunities connect, discover, verify, and transact." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;650;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
+/* ============================================================
+   THE COMPANIES PROJECT — design system
+   ============================================================ */
+:root{
+  --bg:        #050505;
+  --bg-1:      #08090b;
+  --panel:     rgba(255,255,255,.025);
+  --panel-2:   rgba(255,255,255,.045);
+  --line:      rgba(255,255,255,.08);
+  --line-2:    rgba(255,255,255,.14);
+  --white:     #ffffff;
+  --t-1:       rgba(255,255,255,.92);
+  --t-2:       rgba(255,255,255,.62);
+  --t-3:       rgba(255,255,255,.40);
+  --t-4:       rgba(255,255,255,.26);
+  --blue:      #4d8dff;
+  --blue-soft: rgba(77,141,255,.14);
+  --blue-line: rgba(77,141,255,.34);
+  --gold:      #c8a96b;
+  --gold-soft: rgba(200,169,107,.12);
+  --gold-line: rgba(200,169,107,.34);
+  --ok:        #5ad6a0;
+  --maxw:      1240px;
+  --ease:      cubic-bezier(.22,.61,.36,1);
+  --r-s:       10px;
+  --r-m:       16px;
+  --r-l:       22px;
+  --mono:      "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans:      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+:root{ --green: #5ad6a0; }
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
 body{
-    font-family:Arial,sans-serif;
-    background:#f7f9fc;
-    text-align:center;
-    padding-top:100px;
-    color:#1e293b;
+  background:var(--bg);
+  color:var(--t-1);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.6;
+  letter-spacing:-.01em;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+::selection{ background:rgba(77,141,255,.32); color:#fff; }
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+canvas{ display:block; }
+
+/* ambient page background glow */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(1100px 700px at 78% -8%, rgba(77,141,255,.10), transparent 60%),
+    radial-gradient(900px 600px at 8% 12%, rgba(77,141,255,.05), transparent 60%),
+    radial-gradient(700px 700px at 90% 120%, rgba(200,169,107,.045), transparent 60%);
+}
+.noise{
+  position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.5;
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
 }
 
-h1{
-    color:#0057b8;
-    font-size:42px;
+/* ---------- layout ---------- */
+.wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 32px; position:relative; z-index:2; }
+section{ position:relative; z-index:2; }
+.sec{ padding:130px 0; }
+.sec-tight{ padding:96px 0; }
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{ font-weight:600; letter-spacing:-.03em; line-height:1.04; color:#fff; }
+.display{
+  font-size:clamp(40px, 5.4vw, 76px);
+  font-weight:650;
+  letter-spacing:-.04em;
+  line-height:1.0;
+}
+.h2{ font-size:clamp(32px,3.6vw,52px); letter-spacing:-.035em; }
+.h3{ font-size:clamp(22px,2vw,28px); letter-spacing:-.025em; font-weight:600; }
+.lead{ font-size:clamp(17px,1.4vw,20px); color:var(--t-2); line-height:1.62; font-weight:400; letter-spacing:-.012em; }
+.muted{ color:var(--t-2); }
+.t3{ color:var(--t-3); }
+.balance{ text-wrap:balance; }
+.pretty{ text-wrap:pretty; }
+
+/* eyebrow / section labels */
+.eyebrow{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--mono);
+  font-size:12px; font-weight:500;
+  letter-spacing:.22em; text-transform:uppercase;
+  color:var(--t-3);
+}
+.eyebrow .dot{ width:5px; height:5px; border-radius:50%; background:var(--blue); box-shadow:0 0 12px 1px var(--blue); }
+.eyebrow.gold .dot{ background:var(--gold); box-shadow:0 0 12px 1px var(--gold); }
+.eyebrow .idx{ color:var(--t-4); }
+
+.section-head{ max-width:760px; }
+.section-head .h2{ margin-top:20px; }
+.section-head p{ margin-top:22px; }
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-family:var(--sans); font-size:15px; font-weight:500; letter-spacing:-.01em;
+  height:48px; padding:0 24px; border-radius:999px;
+  border:1px solid transparent; cursor:pointer; white-space:nowrap;
+  transition:transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease), color .2s;
+}
+.btn:active{ transform:translateY(1px) scale(.99); }
+.btn-primary{
+  background:var(--blue); color:#fff;
+  box-shadow:0 8px 30px -8px rgba(77,141,255,.6), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.btn-primary:hover{ background:#5f9bff; box-shadow:0 12px 40px -8px rgba(77,141,255,.75), inset 0 1px 0 rgba(255,255,255,.3); }
+.btn-ghost{
+  background:rgba(255,255,255,.04); color:var(--t-1);
+  border-color:var(--line-2); backdrop-filter:blur(8px);
+}
+.btn-ghost:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.28); }
+.btn-sm{ height:40px; padding:0 18px; font-size:14px; }
+.btn .arr{ transition:transform .3s var(--ease); }
+.btn:hover .arr{ transform:translateX(3px); }
+
+/* ---------- glass card ---------- */
+.glass{
+  position:relative;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.018));
+  border:1px solid var(--line);
+  border-radius:var(--r-l);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.glass::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,.10), transparent 32%);
+  -webkit-mask:linear-gradient(#000,#000); opacity:.7;
 }
 
-p{
-    font-size:20px;
-    max-width:700px;
-    margin:auto;
-    line-height:1.8;
+/* chip / badge */
+.chip{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--t-2);
+  padding:7px 12px; border-radius:999px;
+  border:1px solid var(--line); background:rgba(255,255,255,.03);
+}
+.badge-verified{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--gold);
+  padding:4px 9px; border-radius:999px;
+  border:1px solid var(--gold-line); background:var(--gold-soft);
+}
+.badge-verified svg{ width:11px; height:11px; }
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  height:74px;
+  display:flex; align-items:center;
+  transition:background .35s var(--ease), border-color .35s var(--ease), backdrop-filter .35s var(--ease), height .35s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.header.scrolled{
+  height:64px;
+  background:rgba(6,7,9,.62);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.header .wrap{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand .mark{ width:30px; height:30px; flex:none; }
+.brand .name{ font-size:16px; font-weight:600; letter-spacing:-.02em; color:#fff; }
+.brand .name b{ font-weight:600; }
+.brand .name span{ color:var(--t-3); font-weight:500; }
+.nav{ display:flex; align-items:center; gap:4px; }
+.nav a{
+  font-size:14.5px; color:var(--t-2); font-weight:450;
+  padding:8px 14px; border-radius:999px; transition:color .2s, background .2s;
+}
+.nav a:hover{ color:#fff; background:rgba(255,255,255,.05); }
+.header-cta{ display:flex; align-items:center; gap:10px; }
+.menu-btn{ display:none; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{ position:relative; padding-top:150px; padding-bottom:80px; min-height:100vh; display:flex; align-items:center; }
+.hero-grid{ display:grid; grid-template-columns:1.02fr 1.1fr; gap:56px; align-items:center; width:100%; }
+.hero-eyebrow{ margin-bottom:26px; }
+.hero h1{ margin-bottom:26px; }
+.hero h1 .grad{
+  background:linear-gradient(180deg,#fff 30%, rgba(255,255,255,.62));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero .sub{ font-size:clamp(17px,1.5vw,21px); color:var(--t-1); font-weight:450; max-width:560px; margin-bottom:20px; letter-spacing:-.015em; }
+.hero .desc{ color:var(--t-2); max-width:540px; font-size:16px; line-height:1.62; margin-bottom:34px; }
+.hero-actions{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+.hero-trust{ margin-top:30px; display:flex; align-items:center; gap:18px; color:var(--t-3); font-size:13px; }
+.hero-trust .ln{ width:28px; height:1px; background:var(--line-2); }
+
+/* hero visual / mission control */
+.hero-viz{ position:relative; height:540px; }
+.viz-frame{
+  position:absolute; inset:0; border-radius:24px; overflow:hidden;
+  border:1px solid var(--line);
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(77,141,255,.10), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
+  box-shadow:0 40px 120px -40px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.viz-frame::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, transparent 60%, rgba(5,5,5,.55));
+}
+#net-canvas{ position:absolute; inset:0; width:100%; height:100%; }
+.viz-grid-overlay{
+  position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:44px 44px;
+  -webkit-mask:radial-gradient(120% 90% at 50% 40%, #000, transparent 80%);
+          mask:radial-gradient(120% 90% at 50% 40%, #000, transparent 80%);
+}
+.viz-topbar{
+  position:absolute; top:0; left:0; right:0; z-index:4;
+  height:38px; display:flex; align-items:center; gap:10px; padding:0 14px;
+  border-bottom:1px solid var(--line);
+  background:rgba(6,7,9,.5); backdrop-filter:blur(8px);
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--t-3);
+}
+.viz-topbar .live{ display:flex; align-items:center; gap:7px; color:var(--ok); margin-left:auto; }
+.viz-topbar .live i{ width:6px; height:6px; border-radius:50%; background:var(--ok); box-shadow:0 0 10px 1px var(--ok); animation:pulse 1.8s infinite; }
+@keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.35 } }
+
+/* floating stat chips on viz */
+.viz-stat{
+  position:absolute; z-index:5;
+  padding:11px 14px; border-radius:14px;
+  background:rgba(8,9,12,.62); border:1px solid var(--line-2);
+  backdrop-filter:blur(14px);
+  box-shadow:0 18px 40px -16px rgba(0,0,0,.8);
+}
+.viz-stat .v{ font-size:21px; font-weight:600; letter-spacing:-.03em; color:#fff; font-variant-numeric:tabular-nums; }
+.viz-stat .v.gold{ color:var(--gold); }
+.viz-stat .v.blue{ color:var(--blue); }
+.viz-stat .k{ font-family:var(--mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--t-3); margin-top:2px; }
+.vs-a{ top:54px; left:18px; }
+.vs-b{ top:54px; right:18px; }
+.vs-c{ bottom:74px; left:18px; }
+.vs-d{ bottom:18px; right:18px; }
+
+/* mini agent ticker inside viz */
+.viz-ticker{
+  position:absolute; left:18px; right:18px; bottom:18px; z-index:5;
+  height:42px; overflow:hidden; border-radius:12px;
+  background:rgba(8,9,12,.66); border:1px solid var(--line);
+  backdrop-filter:blur(10px);
+  display:flex; align-items:center; padding:0 12px; gap:10px;
+  font-family:var(--mono); font-size:11.5px; color:var(--t-2);
+}
+.viz-ticker .lab{ color:var(--gold); letter-spacing:.1em; }
+.viz-ticker .feed{ position:relative; flex:1; height:100%; overflow:hidden; }
+.viz-ticker .feed span{
+  position:absolute; left:0; white-space:nowrap; top:50%; transform:translateY(-50%);
+  opacity:0; transition:opacity .5s, transform .5s;
+}
+.viz-ticker .feed span.on{ opacity:1; }
+
+/* hero stat strip under hero */
+.statstrip{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.statstrip .wrap{ display:grid; grid-template-columns:repeat(4,1fr); }
+.statstrip .cell{ padding:30px 28px; border-left:1px solid var(--line); }
+.statstrip .cell:first-child{ border-left:none; }
+.statstrip .v{ font-size:34px; font-weight:600; letter-spacing:-.035em; color:#fff; font-variant-numeric:tabular-nums; }
+.statstrip .v .u{ color:var(--blue); }
+.statstrip .k{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--t-3); margin-top:8px; }
+
+/* ============================================================
+   VISION
+   ============================================================ */
+.quote-block{
+  margin:54px 0;
+  border-left:2px solid var(--blue);
+  padding:6px 0 6px 34px;
+}
+.quote-block p{
+  font-size:clamp(28px,3.2vw,44px); font-weight:600; letter-spacing:-.035em; line-height:1.12; color:#fff;
+}
+.quote-block p .dim{ color:var(--t-3); }
+.vision-body{ display:grid; grid-template-columns:1fr 1fr; gap:28px 64px; max-width:980px; }
+.vision-body p{ color:var(--t-2); font-size:17px; line-height:1.62; }
+
+/* ============================================================
+   PLATFORM CARDS
+   ============================================================ */
+.cards-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:56px; }
+.pcard{ padding:28px 24px 30px; border-radius:var(--r-l); min-height:268px; display:flex; flex-direction:column; overflow:hidden; transition:transform .4s var(--ease), border-color .4s var(--ease); }
+.pcard:hover{ transform:translateY(-5px); border-color:var(--line-2); }
+.pcard .ic{
+  width:46px; height:46px; border-radius:13px; display:grid; place-items:center;
+  border:1px solid var(--blue-line); background:var(--blue-soft); color:var(--blue);
+  margin-bottom:auto;
+}
+.pcard .num{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:var(--t-4); margin-bottom:20px; }
+.pcard h3{ font-size:21px; margin:22px 0 10px; }
+.pcard p{ color:var(--t-2); font-size:14.5px; line-height:1.55; }
+.pcard .ic svg{ width:22px; height:22px; }
+
+/* ============================================================
+   PRODUCT PREVIEW MOCK
+   ============================================================ */
+.preview-shell{
+  margin-top:56px; border-radius:24px; overflow:hidden;
+  border:1px solid var(--line-2);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+  box-shadow:0 60px 160px -50px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.pv-chrome{ height:46px; display:flex; align-items:center; gap:14px; padding:0 18px; border-bottom:1px solid var(--line); background:rgba(6,7,9,.7); }
+.pv-dots{ display:flex; gap:7px; }
+.pv-dots i{ width:11px; height:11px; border-radius:50%; background:rgba(255,255,255,.14); }
+.pv-url{ font-family:var(--mono); font-size:12px; color:var(--t-3); letter-spacing:.04em; display:flex; align-items:center; gap:8px; }
+.pv-url .lock{ color:var(--t-4); }
+.pv-tabs{ margin-left:auto; display:flex; gap:6px; }
+.pv-tabs span{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--t-3); padding:6px 11px; border-radius:8px; border:1px solid transparent; }
+.pv-tabs span.act{ color:#fff; background:rgba(255,255,255,.06); border-color:var(--line); }
+.pv-body{ display:grid; grid-template-columns:1.5fr 1fr; min-height:520px; }
+.pv-left{ position:relative; border-right:1px solid var(--line); padding:22px; display:flex; flex-direction:column; }
+.pv-right{ display:flex; flex-direction:column; }
+.pv-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.pv-head .ttl{ font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--t-2); }
+.graph-wrap{ position:relative; flex:1; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:radial-gradient(100% 80% at 50% 30%, rgba(77,141,255,.07), transparent 60%); min-height:300px; }
+#graph-canvas{ position:absolute; inset:0; width:100%; height:100%; }
+.graph-legend{ position:absolute; left:14px; bottom:14px; display:flex; gap:14px; font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--t-3); }
+.graph-legend i{ width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle; }
+.pv-metrics{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:16px; }
+.pv-metrics .m{ padding:13px 14px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.02); }
+.pv-metrics .m .v{ font-size:20px; font-weight:600; letter-spacing:-.03em; color:#fff; font-variant-numeric:tabular-nums; }
+.pv-metrics .m .k{ font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--t-3); margin-top:4px; }
+
+.pv-panel{ padding:18px 18px 16px; border-bottom:1px solid var(--line); flex:1; display:flex; flex-direction:column; min-height:0; }
+.pv-panel:last-child{ border-bottom:none; }
+.pv-panel .ph{ display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+.pv-panel .ph .t{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--t-2); }
+.pv-panel .ph .live{ margin-left:auto; display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--ok); }
+.pv-panel .ph .live i{ width:5px; height:5px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px 1px var(--ok); animation:pulse 1.8s infinite; }
+
+.agent-row{ display:flex; align-items:center; gap:11px; padding:9px 0; border-top:1px solid rgba(255,255,255,.05); opacity:0; transform:translateY(6px); }
+.agent-row.in{ opacity:1; transform:none; transition:opacity .5s var(--ease), transform .5s var(--ease); }
+.agent-av{ width:28px; height:28px; border-radius:8px; flex:none; display:grid; place-items:center; font-family:var(--mono); font-size:11px; font-weight:600; color:var(--blue); border:1px solid var(--blue-line); background:var(--blue-soft); }
+.agent-tx{ font-size:13px; color:var(--t-1); line-height:1.3; }
+.agent-tx b{ color:#fff; font-weight:600; }
+.agent-tx .st{ font-family:var(--mono); font-size:10.5px; color:var(--t-3); margin-top:2px; display:block; letter-spacing:.04em; }
+.agent-row .ago{ margin-left:auto; font-family:var(--mono); font-size:10px; color:var(--t-4); flex:none; }
+
+.opp-row{ display:flex; align-items:center; gap:11px; padding:10px 0; border-top:1px solid rgba(255,255,255,.05); }
+.opp-row .od{ width:7px; height:7px; border-radius:50%; flex:none; background:var(--blue); box-shadow:0 0 8px 1px var(--blue); }
+.opp-row .ot{ font-size:13.5px; color:var(--t-1); }
+.opp-row .ot .sub{ font-family:var(--mono); font-size:10px; color:var(--t-3); margin-top:2px; letter-spacing:.04em; }
+.opp-row .val{ margin-left:auto; font-family:var(--mono); font-size:12px; color:var(--gold); }
+
+/* ============================================================
+   FUTURE — three layers
+   ============================================================ */
+.layers{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:56px; }
+.layer{ padding:34px 30px 38px; border-radius:var(--r-l); position:relative; overflow:hidden; min-height:300px; display:flex; flex-direction:column; }
+.layer .era{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--t-4); }
+.layer h3{ font-size:26px; margin:16px 0 12px; }
+.layer p{ color:var(--t-2); font-size:15px; margin-bottom:auto; }
+.layer .viz{ height:90px; margin-top:26px; opacity:.9; }
+.layer.active{ border-color:var(--blue-line); background:linear-gradient(180deg, rgba(77,141,255,.08), rgba(77,141,255,.015)); }
+.layer.active .era{ color:var(--blue); }
+.layer .tag{ position:absolute; top:22px; right:22px; }
+
+/* next-gen cards */
+.cards-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:56px; }
+.ncard{ padding:30px 28px 34px; border-radius:var(--r-l); transition:border-color .35s, transform .35s var(--ease); }
+.ncard:hover{ transform:translateY(-4px); border-color:var(--line-2); }
+.ncard .ic{ width:44px; height:44px; border-radius:12px; display:grid; place-items:center; margin-bottom:24px; border:1px solid var(--line-2); background:rgba(255,255,255,.03); color:var(--t-1); }
+.ncard .ic svg{ width:21px; height:21px; }
+.ncard h3{ font-size:20px; margin-bottom:10px; }
+.ncard p{ color:var(--t-2); font-size:14.5px; line-height:1.55; }
+
+/* ============================================================
+   ROADMAP
+   ============================================================ */
+.roadmap{ margin-top:64px; position:relative; }
+.road-line{ position:absolute; left:0; right:0; top:62px; height:1px; background:linear-gradient(90deg, transparent, var(--line-2) 8%, var(--line-2) 92%, transparent); }
+.road-prog{ position:absolute; left:0; top:62px; height:1px; width:0; background:linear-gradient(90deg, var(--blue), rgba(77,141,255,.2)); box-shadow:0 0 12px 1px rgba(77,141,255,.6); transition:width 1.4s var(--ease); }
+.road-track{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+.road-item{ position:relative; padding-top:96px; }
+.road-item .yr{ font-size:30px; font-weight:600; letter-spacing:-.03em; color:#fff; font-variant-numeric:tabular-nums; position:absolute; top:0; left:0; }
+.road-item .node{ position:absolute; top:55px; left:1px; width:15px; height:15px; border-radius:50%; background:var(--bg); border:2px solid var(--line-2); transition:border-color .4s, box-shadow .4s, background .4s; }
+.road-item.lit .node{ border-color:var(--blue); background:var(--blue); box-shadow:0 0 0 5px rgba(77,141,255,.14), 0 0 16px 2px rgba(77,141,255,.5); }
+.road-item .ph{ font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--t-4); margin-bottom:8px; }
+.road-item.lit .ph{ color:var(--blue); }
+.road-item .lbl{ font-size:17px; font-weight:500; color:var(--t-1); letter-spacing:-.02em; line-height:1.25; }
+.road-item .lbl.dim{ color:var(--t-3); }
+
+/* ============================================================
+   PARTNERS / FOUNDING
+   ============================================================ */
+.founding{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+.founding-list{ list-style:none; display:grid; gap:2px; }
+.founding-list li{
+  display:flex; align-items:center; gap:16px; padding:18px 4px;
+  border-top:1px solid var(--line); font-size:18px; color:var(--t-1); letter-spacing:-.02em;
+}
+.founding-list li:last-child{ border-bottom:1px solid var(--line); }
+.founding-list li .n{ font-family:var(--mono); font-size:12px; color:var(--t-4); width:28px; }
+.founding-list li .ar{ margin-left:auto; color:var(--t-4); transition:transform .3s var(--ease), color .3s; }
+.founding-list li:hover .ar{ transform:translateX(4px); color:var(--blue); }
+.founding-card{ padding:42px 38px; border-radius:var(--r-l); text-align:left; }
+.founding-card .badge-verified{ margin-bottom:22px; }
+.founding-card h3{ font-size:28px; margin-bottom:14px; }
+.founding-card p{ color:var(--t-2); margin-bottom:28px; }
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact{ text-align:center; }
+.contact .h2{ margin:22px auto 0; max-width:14ch; }
+.contact .lead{ margin:24px auto 0; max-width:620px; }
+.contact-email{
+  display:inline-flex; align-items:center; gap:12px; margin:38px 0 30px;
+  font-family:var(--mono); font-size:clamp(15px,1.8vw,20px); letter-spacing:-.01em; color:#fff;
+  padding:16px 26px; border-radius:999px; border:1px solid var(--line-2); background:rgba(255,255,255,.03);
+  transition:border-color .3s, background .3s;
+}
+.contact-email:hover{ border-color:var(--blue-line); background:var(--blue-soft); }
+.contact-email .at{ color:var(--blue); }
+.contact-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{ border-top:1px solid var(--line); padding:80px 0 44px; position:relative; z-index:2; background:linear-gradient(180deg, transparent, rgba(77,141,255,.025)); }
+.footer-top{ display:grid; grid-template-columns:1.6fr repeat(3,1fr); gap:40px; padding-bottom:56px; border-bottom:1px solid var(--line); }
+.footer-brand .brand{ margin-bottom:20px; }
+.footer-brand p{ color:var(--t-2); font-size:14.5px; max-width:300px; }
+.fcol h4{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--t-3); font-weight:500; margin-bottom:18px; }
+.fcol a{ display:block; color:var(--t-2); font-size:14.5px; padding:7px 0; transition:color .2s; }
+.fcol a:hover{ color:#fff; }
+.footer-bottom{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding-top:30px; flex-wrap:wrap; }
+.footer-bottom .cr{ color:var(--t-3); font-size:13.5px; }
+.footer-bottom .cr b{ color:var(--t-1); font-weight:500; }
+.footer-bottom .note{ font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; color:var(--t-4); display:flex; align-items:center; gap:8px; }
+.footer-bottom .note i{ width:5px; height:5px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px 1px var(--gold); }
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-back{
+  position:fixed; inset:0; z-index:100; display:none;
+  background:rgba(3,4,6,.7); backdrop-filter:blur(8px);
+  align-items:center; justify-content:center; padding:24px;
+  opacity:0; transition:opacity .3s var(--ease);
+}
+.modal-back.open{ display:flex; }
+.modal-back.show{ opacity:1; }
+.modal{
+  width:100%; max-width:480px; padding:38px 36px 34px; border-radius:24px;
+  background:linear-gradient(180deg, rgba(20,22,27,.95), rgba(10,11,14,.95));
+  border:1px solid var(--line-2);
+  box-shadow:0 50px 120px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.08);
+  transform:translateY(14px) scale(.985); transition:transform .35s var(--ease);
+}
+.modal-back.show .modal{ transform:none; }
+.modal .x{ position:absolute; }
+.modal-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; }
+.modal .eyebrow{ margin-bottom:14px; }
+.modal h3{ font-size:26px; letter-spacing:-.03em; margin-bottom:10px; }
+.modal .sub{ color:var(--t-2); font-size:15px; margin-bottom:26px; }
+.modal-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:rgba(255,255,255,.03); color:var(--t-2); display:grid; place-items:center; cursor:pointer; transition:.2s; flex:none; }
+.modal-close:hover{ color:#fff; border-color:var(--line-2); background:rgba(255,255,255,.07); }
+.field{ margin-bottom:14px; }
+.field label{ display:block; font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--t-3); margin-bottom:8px; }
+.field input, .field select{
+  width:100%; height:48px; padding:0 16px; border-radius:12px;
+  background:rgba(255,255,255,.03); border:1px solid var(--line-2); color:#fff;
+  font-family:var(--sans); font-size:15px; letter-spacing:-.01em; outline:none; transition:border-color .2s, background .2s;
+  appearance:none;
+}
+.field select{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 16px center; padding-right:40px; }
+.field input::placeholder{ color:var(--t-4); }
+.field input:focus, .field select:focus{ border-color:var(--blue-line); background:rgba(77,141,255,.06); }
+.field.err input{ border-color:#ff6b6b; }
+.field .msg{ font-family:var(--mono); font-size:10.5px; color:#ff8585; margin-top:7px; display:none; letter-spacing:.04em; }
+.field.err .msg{ display:block; }
+.modal .btn{ width:100%; margin-top:10px; }
+.modal-foot{ margin-top:16px; text-align:center; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--t-4); }
+.modal-success{ text-align:center; padding:14px 0 6px; display:none; }
+.modal-success.on{ display:block; }
+.modal-success .ok-ic{ width:64px; height:64px; border-radius:50%; margin:0 auto 22px; display:grid; place-items:center; border:1px solid var(--gold-line); background:var(--gold-soft); color:var(--gold); }
+.modal-success h3{ margin-bottom:10px; }
+.modal-success p{ color:var(--t-2); font-size:15px; }
+
+/* ---------- reveal (progressive enhancement) ----------
+   Content is VISIBLE by default. Only once JS confirms it is running
+   (adds .js-anim to <html>) do we hide-then-animate. So if the script
+   ever fails to load, everything still shows. Uses @keyframes (not a
+   transition) because keyframe animations reliably hold their end state. */
+.reveal{ opacity:1; transform:none; }
+.js-anim .reveal{ opacity:0; transform:translateY(22px); }
+.js-anim .reveal.in{ animation:revealIn .7s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes revealIn{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:none; } }
+.js-anim .reveal.d1.in{ animation-delay:.07s; } .js-anim .reveal.d2.in{ animation-delay:.14s; }
+.js-anim .reveal.d3.in{ animation-delay:.21s; } .js-anim .reveal.d4.in{ animation-delay:.28s; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; }
+  .reveal, .js-anim .reveal{ opacity:1 !important; transform:none !important; }
 }
 
-.logo{
-    font-size:60px;
-    margin-bottom:20px;
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1080px){
+  .hero-grid{ grid-template-columns:1fr; gap:44px; }
+  .hero-viz{ height:460px; }
+  .cards-4{ grid-template-columns:repeat(2,1fr); }
+  .pv-body{ grid-template-columns:1fr; }
+  .pv-left{ border-right:none; border-bottom:1px solid var(--line); }
 }
+@media (max-width:860px){
+  .nav{ display:none; }
+  .menu-btn{ display:grid; }
+  .header-cta .btn-ghost{ display:none; }
+  .layers{ grid-template-columns:1fr; }
+  .cards-3{ grid-template-columns:1fr; }
+  .vision-body{ grid-template-columns:1fr; gap:22px; }
+  .founding{ grid-template-columns:1fr; gap:36px; }
+  .footer-top{ grid-template-columns:1fr 1fr; gap:32px; }
+  .road-track{ grid-template-columns:1fr; gap:0; }
+  .road-line, .road-prog{ display:none; }
+  .road-item{ padding:24px 0 24px 28px; }
+  .road-item .yr{ position:static; font-size:24px; }
+  .road-item .node{ top:32px; left:-22px; }
+  .roadmap::before{ content:""; position:absolute; left:6px; top:10px; bottom:10px; width:1px; background:var(--line-2); }
+}
+@media (max-width:560px){
+  .wrap{ padding:0 20px; }
+  .sec{ padding:90px 0; }
+  .statstrip .wrap{ grid-template-columns:repeat(2,1fr); }
+  .statstrip .cell:nth-child(2){ border-left:none; }
+  .statstrip .cell:nth-child(3){ border-left:none; }
+  .cards-4{ grid-template-columns:1fr; }
+  .pv-metrics{ grid-template-columns:repeat(2,1fr); }
+  .footer-top{ grid-template-columns:1fr; }
+  .hero-viz{ height:400px; }
+  .viz-stat .v{ font-size:18px; }
+}
+
 </style>
-
 </head>
 <body>
+<div class="noise"></div>
 
-<div class="logo">🇮🇱</div>
+<!-- ============================ HEADER ============================ -->
+<header class="header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="The Companies Project home">
+      <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <g stroke="#4d8dff" stroke-width="1.4">
+          <path d="M16 6 L25 11 M16 6 L7 11 M16 6 L16 16 M7 11 L7 21 M25 11 L25 21 M7 21 L16 26 M25 21 L16 26 M16 16 L7 21 M16 16 L25 21" opacity=".55"/>
+        </g>
+        <circle cx="16" cy="6" r="2.6" fill="#fff"/>
+        <circle cx="7" cy="11" r="2.2" fill="#4d8dff"/>
+        <circle cx="25" cy="11" r="2.2" fill="#4d8dff"/>
+        <circle cx="16" cy="16" r="2.4" fill="#c8a96b"/>
+        <circle cx="7" cy="21" r="2.2" fill="#4d8dff"/>
+        <circle cx="25" cy="21" r="2.2" fill="#4d8dff"/>
+        <circle cx="16" cy="26" r="2.2" fill="#4d8dff"/>
+      </svg>
+      <span class="name"><b>The Companies Project</b></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#vision">Vision</a>
+      <a href="#platform">Platform</a>
+      <a href="#future">Future</a>
+      <a href="#partners">Partners</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <button class="btn btn-ghost btn-sm" data-modal="partner">Become a Partner</button>
+      <button class="btn btn-primary btn-sm" data-modal="access">Join Early Access</button>
+      <button class="btn btn-ghost btn-sm menu-btn" aria-label="Menu" onclick="document.querySelector('#vision').scrollIntoView()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
 
-<h1>פרויקט החברות הישראליות</h1>
+<!-- ============================ HERO ============================ -->
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <div class="hero-eyebrow eyebrow reveal"><span class="dot"></span> The AI-Native Business Network</div>
+        <h1 class="display reveal d1">The AI-Native<br/>Network For<br/><span class="grad">Global Business</span></h1>
+        <p class="sub reveal d2">A new infrastructure layer where companies, AI agents, and business opportunities connect, discover, verify, and transact.</p>
+        <p class="desc reveal d2 pretty">The Companies Project is building a future where businesses are no longer discovered through websites alone — but through intelligent AI systems that understand who companies are, what they do, and how they can work together.</p>
+        <div class="hero-actions reveal d3">
+          <button class="btn btn-primary" data-modal="access">Join Early Access <span class="arr">→</span></button>
+          <button class="btn btn-ghost" data-modal="partner">Become a Partner</button>
+        </div>
+        <div class="hero-trust reveal d4">
+          <span class="ln"></span> Backed by a long-term thesis on the AI economy
+        </div>
+      </div>
 
-<p>
-האתר נמצא בשלבי הקמה.
-</p>
+      <!-- mission control visual -->
+      <div class="hero-viz reveal d2">
+        <div class="viz-frame">
+          <canvas id="net-canvas"></canvas>
+          <div class="viz-grid-overlay"></div>
+          <div class="viz-topbar">
+            <span>Global Company Graph</span>
+            <span style="color:var(--t-4)">// network.live</span>
+            <span class="live"><i></i> Live</span>
+          </div>
 
-<p>
-Coming Soon
-</p>
+          <div class="viz-stat vs-a">
+            <div class="v"><span data-count="72" data-suffix="M">0</span></div>
+            <div class="k">Companies</div>
+          </div>
+          <div class="viz-stat vs-b">
+            <div class="v blue"><span data-count="189">0</span></div>
+            <div class="k">Countries</div>
+          </div>
+          <div class="viz-stat vs-c">
+            <div class="v"><span data-count="4.1" data-dec="1" data-suffix="B">0</span></div>
+            <div class="k">Relationships</div>
+          </div>
+          <div class="viz-stat vs-d">
+            <div class="v gold">Verified</div>
+            <div class="k">Identities</div>
+          </div>
 
+          <div class="viz-ticker">
+            <span class="lab">AGENTS</span>
+            <div class="feed"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- stat strip -->
+<section class="statstrip">
+  <div class="wrap">
+    <div class="cell reveal"><div class="v"><span data-count="72" data-suffix="M">0</span></div><div class="k">Companies Mapped</div></div>
+    <div class="cell reveal d1"><div class="v"><span data-count="189">0</span></div><div class="k">Countries</div></div>
+    <div class="cell reveal d2"><div class="v"><span data-count="4.1" data-dec="1" data-suffix="B">0</span></div><div class="k">Relationships</div></div>
+    <div class="cell reveal d3"><div class="v"><span class="u">∞</span></div><div class="k">Verified Identities</div></div>
+  </div>
+</section>
+
+<!-- ============================ VISION ============================ -->
+<section id="vision" class="sec">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="idx">01</span><span class="dot"></span> Vision</div>
+      <h2 class="h2 balance">The Future Of Business Discovery</h2>
+    </div>
+
+    <div class="quote-block reveal d1">
+      <p>"Websites were built for humans.<br/><span class="dim">The Companies Project is built for AI."</span></p>
+    </div>
+
+    <div class="vision-body">
+      <p class="reveal">Business information is fragmented across websites, PDFs, CRMs, marketplaces, and databases. The signal that defines a company is scattered, unstructured, and impossible to trust at scale.</p>
+      <p class="reveal d1">AI systems struggle to understand who companies are, what they offer, and how they should connect — because the world's business data was never designed to be read by machines.</p>
+      <p class="reveal d2" style="grid-column:1 / -1; max-width:720px;">The Companies Project aims to solve this by creating a structured, verified, AI-readable network of companies — a single source of truth where intelligent systems can reason about the global economy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PLATFORM ============================ -->
+<section id="platform" class="sec">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="idx">02</span><span class="dot"></span> Platform</div>
+      <h2 class="h2 balance">How The Future Network Works</h2>
+      <p class="lead pretty">Four layers turn fragmented business data into a living, verifiable network that humans and AI agents can both navigate.</p>
+    </div>
+
+    <div class="cards-4">
+      <article class="glass pcard reveal">
+        <div class="num">01 / PUBLISH</div>
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h9l5 5v13H6z"/><path d="M14 3v6h6"/><path d="M9 13h6M9 17h6"/></svg></div>
+        <h3>Publish</h3>
+        <p>Companies create rich, structured profiles designed for both humans and AI systems to read, parse, and reason about.</p>
+      </article>
+      <article class="glass pcard reveal d1">
+        <div class="num">02 / VERIFY</div>
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Verify</h3>
+        <p>Identity, ownership, and trust layers improve business reliability and make counterparties safe to transact with.</p>
+      </article>
+      <article class="glass pcard reveal d2">
+        <div class="num">03 / DISCOVER</div>
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <h3>Discover</h3>
+        <p>AI agents identify opportunities, suppliers, customers, and partners automatically — across borders, in real time.</p>
+      </article>
+      <article class="glass pcard reveal d3">
+        <div class="num">04 / CONNECT</div>
+        <div class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.5l6.6-3M8.7 13.5l6.6 3"/></svg></div>
+        <h3>Connect</h3>
+        <p>Businesses engage through AI-assisted workflows that reduce friction, compress timelines, and increase speed.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PRODUCT PREVIEW ============================ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="idx">03</span><span class="dot"></span> Product Preview</div>
+      <h2 class="h2 balance">A Live Window Into The Network</h2>
+      <p class="lead pretty">An early look at the operating surface — a global company graph, an autonomous agent stream, and a live market of opportunities, side by side.</p>
+    </div>
+
+    <div class="preview-shell reveal d1">
+      <div class="pv-chrome">
+        <div class="pv-dots"><i></i><i></i><i></i></div>
+        <div class="pv-url"><span class="lock">⌁</span> network.thecompaniesproject.co.il</div>
+        <div class="pv-tabs"><span class="act">Graph</span><span>Agents</span><span>Markets</span></div>
+      </div>
+      <div class="pv-body">
+        <!-- left: graph -->
+        <div class="pv-left">
+          <div class="pv-head">
+            <span class="ttl">Global Company Graph</span>
+            <span class="badge-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg> Verified</span>
+          </div>
+          <div class="graph-wrap">
+            <canvas id="graph-canvas"></canvas>
+            <div class="graph-legend">
+              <span><i style="background:#4d8dff;box-shadow:0 0 8px 1px #4d8dff"></i>Company</span>
+              <span><i style="background:#c8a96b;box-shadow:0 0 8px 1px #c8a96b"></i>Verified</span>
+              <span><i style="background:#78aaff"></i>Hub</span>
+            </div>
+          </div>
+          <div class="pv-metrics">
+            <div class="m"><div class="v"><span data-count="72" data-suffix="M">0</span></div><div class="k">Companies</div></div>
+            <div class="m"><div class="v"><span data-count="189">0</span></div><div class="k">Countries</div></div>
+            <div class="m"><div class="v"><span data-count="4.1" data-dec="1" data-suffix="B">0</span></div><div class="k">Relationships</div></div>
+            <div class="m"><div class="v" style="color:var(--gold)"><span data-count="2.4" data-dec="1" data-suffix="M">0</span></div><div class="k">Verified</div></div>
+          </div>
+        </div>
+        <!-- right: streams -->
+        <div class="pv-right">
+          <div class="pv-panel">
+            <div class="ph"><span class="t">AI Activity Stream</span><span class="live"><i></i> Live</span></div>
+            <div id="agent-stream"></div>
+          </div>
+          <div class="pv-panel">
+            <div class="ph"><span class="t">Live Opportunity Stream</span><span class="live"><i></i> Live</span></div>
+            <div id="opp-stream"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FUTURE ============================ -->
+<section id="future" class="sec">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="idx">04</span><span class="dot"></span> The Future</div>
+      <h2 class="h2 balance">A New Layer For The AI Economy</h2>
+      <p class="lead pretty">Every era of the internet organized a different primitive. The next one organizes companies and the agents that act for them.</p>
+    </div>
+
+    <div class="layers">
+      <article class="glass layer reveal">
+        <div class="era">1998 → Information</div>
+        <h3>Search Engines</h3>
+        <p>Organized the world's information and made it instantly retrievable for humans.</p>
+        <svg class="viz" viewBox="0 0 200 90" fill="none" aria-hidden="true"><g stroke="rgba(255,255,255,.18)" stroke-width="1"><path d="M10 70h180M10 50h180M10 30h180"/></g><g fill="rgba(255,255,255,.32)"><rect x="14" y="64" width="50" height="3" rx="1.5"/><rect x="14" y="44" width="90" height="3" rx="1.5"/><rect x="14" y="24" width="70" height="3" rx="1.5"/></g></svg>
+      </article>
+      <article class="glass layer reveal d1">
+        <div class="era">2004 → People</div>
+        <h3>Social Networks</h3>
+        <p>Connected people and mapped the human graph at planetary scale.</p>
+        <svg class="viz" viewBox="0 0 200 90" fill="none" aria-hidden="true"><g stroke="rgba(255,255,255,.2)" stroke-width="1"><path d="M100 45L60 25M100 45L140 25M100 45L60 65M100 45L140 65M60 25L140 25M60 65L140 65"/></g><g fill="rgba(255,255,255,.4)"><circle cx="100" cy="45" r="5"/><circle cx="60" cy="25" r="4"/><circle cx="140" cy="25" r="4"/><circle cx="60" cy="65" r="4"/><circle cx="140" cy="65" r="4"/></g></svg>
+      </article>
+      <article class="glass layer active reveal d2">
+        <div class="tag chip" style="color:var(--blue);border-color:var(--blue-line);background:var(--blue-soft)">Now</div>
+        <div class="era">2026 → Companies + Agents</div>
+        <h3>The Companies Project</h3>
+        <p>Will connect companies and AI agents — the economic graph that machines can finally reason about.</p>
+        <svg class="viz" viewBox="0 0 200 90" fill="none" aria-hidden="true"><g stroke="rgba(77,141,255,.5)" stroke-width="1"><path d="M100 45L55 22M100 45L150 25M100 45L40 60M100 45L160 62M100 45L100 80M55 22L40 60M150 25L160 62"/></g><g><circle cx="100" cy="45" r="6" fill="#4d8dff"/><circle cx="55" cy="22" r="4" fill="#c8a96b"/><circle cx="150" cy="25" r="4" fill="#4d8dff"/><circle cx="40" cy="60" r="4" fill="#4d8dff"/><circle cx="160" cy="62" r="4" fill="#c8a96b"/><circle cx="100" cy="80" r="4" fill="#4d8dff"/></g></svg>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ BUILT FOR NEXT GEN ============================ -->
+<section class="sec-tight">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="idx">05</span><span class="dot"></span> Who It's For</div>
+      <h2 class="h2 balance">Built For The Next Generation Of AI</h2>
+    </div>
+    <div class="cards-3">
+      <article class="glass ncard reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h3M8 12h3M8 16h3M14 8h2M14 12h2M14 16h2"/></svg></div>
+        <h3>Companies</h3>
+        <p>Increase discoverability across future AI ecosystems and become legible to the systems making decisions.</p>
+      </article>
+      <article class="glass ncard reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><rect x="8" y="8" width="8" height="8" rx="2"/></svg></div>
+        <h3>AI Platforms</h3>
+        <p>Access structured, verified business intelligence to ground models in real-world economic truth.</p>
+      </article>
+      <article class="glass ncard reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/><path d="M12 2v2M12 12v0"/></svg></div>
+        <h3>Enterprise Agents</h3>
+        <p>Discover, evaluate, and connect with companies automatically — turning research into action.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ROADMAP ============================ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="idx">06</span><span class="dot"></span> Roadmap</div>
+      <h2 class="h2 balance">The Path To Autonomous Commerce</h2>
+      <p class="lead pretty">A five-year arc from verified identity to fully autonomous business transactions.</p>
+    </div>
+
+    <div class="roadmap reveal d1">
+      <div class="road-line"></div>
+      <div class="road-prog"></div>
+      <div class="road-track">
+        <div class="road-item lit">
+          <div class="yr">2026</div><div class="node"></div>
+          <div class="ph">Phase 01 · Active</div>
+          <div class="lbl">Verified Company Layer</div>
+        </div>
+        <div class="road-item">
+          <div class="yr">2027</div><div class="node"></div>
+          <div class="ph">Phase 02</div>
+          <div class="lbl">Global Company Graph</div>
+        </div>
+        <div class="road-item">
+          <div class="yr">2028</div><div class="node"></div>
+          <div class="ph">Phase 03</div>
+          <div class="lbl dim">AI Discovery Network</div>
+        </div>
+        <div class="road-item">
+          <div class="yr">2029</div><div class="node"></div>
+          <div class="ph">Phase 04</div>
+          <div class="lbl dim">Agent-to-Agent Commerce</div>
+        </div>
+        <div class="road-item">
+          <div class="yr">2030</div><div class="node"></div>
+          <div class="ph">Phase 05</div>
+          <div class="lbl dim">Autonomous Business Transactions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PARTNERS / FOUNDING ============================ -->
+<section id="partners" class="sec">
+  <div class="wrap">
+    <div class="founding">
+      <div class="reveal">
+        <div class="eyebrow gold"><span class="idx">07</span><span class="dot"></span> Founding Network</div>
+        <h2 class="h2 balance" style="margin-top:20px">Join The Founding Network</h2>
+        <p class="lead pretty" style="margin-top:22px">We are building the future infrastructure layer for AI-native business discovery — and we are assembling the people who will define it.</p>
+        <ul class="founding-list">
+          <li><span class="n">01</span> Founding Companies <span class="ar">→</span></li>
+          <li><span class="n">02</span> Technology Partners <span class="ar">→</span></li>
+          <li><span class="n">03</span> AI Researchers <span class="ar">→</span></li>
+          <li><span class="n">04</span> Strategic Investors <span class="ar">→</span></li>
+          <li><span class="n">05</span> Enterprise Innovators <span class="ar">→</span></li>
+        </ul>
+      </div>
+      <div class="glass founding-card reveal d1">
+        <span class="badge-verified"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg> Founding Cohort · 2026</span>
+        <h3 class="balance">Help define the AI-native business network.</h3>
+        <p class="pretty">Founding partners shape the standards, the trust layer, and the protocols that the next generation of business will run on. Onboarding happens in small, curated waves.</p>
+        <button class="btn btn-primary" data-modal="partner" style="width:100%">Become Part Of The Founding Network <span class="arr">→</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTACT ============================ -->
+<section id="contact" class="sec">
+  <div class="wrap contact">
+    <div class="reveal">
+      <div class="eyebrow" style="justify-content:center"><span class="idx">08</span><span class="dot"></span> Contact</div>
+      <h2 class="h2 balance">Let's Build The Future Together</h2>
+      <p class="lead pretty">Whether you are a company, technology partner, investor, or researcher, we would love to hear from you.</p>
+    </div>
+    <div class="reveal d1">
+      <a class="contact-email" href="/cdn-cgi/l/email-protection#40232f2e3421233400342825232f2d30212e29253330322f2a2523346e232f6e292c">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t-3)" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg>
+        contact<span class="at">@</span>thecompaniesproject.co.il
+      </a>
+    </div>
+    <div class="contact-actions reveal d2">
+      <button class="btn btn-ghost" data-modal="partner">Become a Partner</button>
+      <button class="btn btn-primary" data-modal="access">Join Early Access <span class="arr">→</span></button>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="#top">
+          <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <g stroke="#4d8dff" stroke-width="1.4"><path d="M16 6 L25 11 M16 6 L7 11 M16 6 L16 16 M7 11 L7 21 M25 11 L25 21 M7 21 L16 26 M25 21 L16 26 M16 16 L7 21 M16 16 L25 21" opacity=".55"/></g>
+            <circle cx="16" cy="6" r="2.6" fill="#fff"/><circle cx="7" cy="11" r="2.2" fill="#4d8dff"/><circle cx="25" cy="11" r="2.2" fill="#4d8dff"/><circle cx="16" cy="16" r="2.4" fill="#c8a96b"/><circle cx="7" cy="21" r="2.2" fill="#4d8dff"/><circle cx="25" cy="21" r="2.2" fill="#4d8dff"/><circle cx="16" cy="26" r="2.2" fill="#4d8dff"/>
+          </svg>
+          <span class="name"><b>The Companies Project</b></span>
+        </a>
+        <p class="pretty">The AI-native business network — a structured, verified, machine-readable layer for the global economy.</p>
+      </div>
+      <div class="fcol">
+        <h4>Company</h4>
+        <a href="#vision">Vision</a>
+        <a href="#platform">Platform</a>
+        <a href="#future">Roadmap</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="fcol">
+        <h4>Ecosystem</h4>
+        <a href="#partners" data-modal="partner">Companies</a>
+        <a href="#partners" data-modal="partner">Partners</a>
+        <a href="#partners" data-modal="partner">Investors</a>
+        <a href="#partners" data-modal="partner">Researchers</a>
+      </div>
+      <div class="fcol">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="cr">© 2026 <b>The Companies Project</b> — Building the AI-native business network.</div>
+      <div class="note"><i></i> Concept platform currently under development</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================ MODAL ============================ -->
+<div class="modal-back" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="glass modal">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow" id="modal-eyebrow-wrap"><span class="dot"></span> <span id="modal-eyebrow">Early Access</span></div>
+        <h3 id="modal-title" style="margin-top:14px">Join Early Access</h3>
+        <p class="sub" id="modal-sub">Request a place in the founding cohort. We onboard partners in small, curated waves.</p>
+      </div>
+      <button class="modal-close" data-close aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <form id="modal-form" novalidate>
+      <div class="field">
+        <label for="f-name">Full Name</label>
+        <input id="f-name" type="text" placeholder="Jane Cooper" autocomplete="name" />
+        <div class="msg">Please enter your name.</div>
+      </div>
+      <div class="field">
+        <label for="f-email">Work Email</label>
+        <input id="f-email" type="email" placeholder="jane@company.com" autocomplete="email" />
+        <div class="msg">Please enter a valid email address.</div>
+      </div>
+      <div class="field">
+        <label for="f-company">Company</label>
+        <input id="f-company" type="text" placeholder="Company name" autocomplete="organization" />
+        <div class="msg">Please enter your company.</div>
+      </div>
+      <div class="field">
+        <label for="f-interest">I am a</label>
+        <select id="f-interest">
+          <option>Founding Company</option>
+          <option>Technology Partner</option>
+          <option>AI Researcher</option>
+          <option>Strategic Investor</option>
+          <option>Enterprise Innovator</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Request Access <span class="arr">→</span></button>
+      <div class="modal-foot">We onboard in curated waves · No spam, ever</div>
+    </form>
+
+    <div class="modal-success" id="modal-success">
+      <div class="ok-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12l5 5L20 6"/></svg></div>
+      <h3>You're on the list.</h3>
+      <p class="pretty">Thank you for your interest in The Companies Project. We'll be in touch as we open the next founding wave.</p>
+      <button class="btn btn-ghost" data-close style="margin-top:24px">Close</button>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ============================================================
+   THE COMPANIES PROJECT — interactions
+   ============================================================ */
+(function(){
+  "use strict";
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Confirm JS is running: this enables the hide-then-animate styles.
+     If the script fails to load, .js-anim is never set and all content
+     stays visible (opacity:1) — never stuck hidden. */
+  document.documentElement.classList.add("js-anim");
+
+  /* ---------- header blur on scroll ---------- */
+  const header = $(".header");
+  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 24);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive:true });
+
+  /* ---------- viewport check helper (scroll-based; IntersectionObserver
+     is unreliable in some sandboxed iframes, so we don't depend on it) ---------- */
+  function inView(el, ratio){
+    const r = el.getBoundingClientRect();
+    const h = window.innerHeight || document.documentElement.clientHeight;
+    if(r.height === 0 && r.width === 0) return false;
+    return r.top < h * (ratio || 0.9) && r.bottom > 0;
+  }
+  const viewportCbs = [];
+  function runViewportCbs(){ for(let i=viewportCbs.length-1; i>=0; i--){ if(viewportCbs[i]()) viewportCbs.splice(i,1); } }
+  window.addEventListener("scroll", runViewportCbs, { passive:true });
+  window.addEventListener("resize", runViewportCbs);
+  window.addEventListener("load", runViewportCbs);
+
+  /* ---------- reveal on scroll ---------- */
+  const reveals = $$(".reveal");
+  viewportCbs.push(function(){
+    let done = true;
+    reveals.forEach(el=>{
+      if(el.classList.contains("in")) return;
+      if(inView(el, 0.92)) el.classList.add("in");
+      else done = false;
+    });
+    return done; // remove callback once everything is revealed
+  });
+
+  /* ---------- animated counters ---------- */
+  function animateCount(el){
+    const target = parseFloat(el.dataset.count);
+    const dec = parseInt(el.dataset.dec || "0", 10);
+    const suf = el.dataset.suffix || "";
+    const dur = 1500;
+    const start = performance.now();
+    function frame(now){
+      let p = Math.min(1, (now - start) / dur);
+      p = 1 - Math.pow(1 - p, 3);
+      const val = target * p;
+      el.textContent = val.toLocaleString("en-US", { minimumFractionDigits:dec, maximumFractionDigits:dec }) + suf;
+      if(p < 1) requestAnimationFrame(frame);
+      else el.textContent = target.toLocaleString("en-US", { minimumFractionDigits:dec, maximumFractionDigits:dec }) + suf;
+    }
+    if(reduce){ el.textContent = target.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec})+suf; }
+    else requestAnimationFrame(frame);
+  }
+  const counters = $$("[data-count]");
+  viewportCbs.push(function(){
+    let done = true;
+    counters.forEach(el=>{
+      if(el._counted) return;
+      if(inView(el, 0.88)){ el._counted = true; animateCount(el); }
+      else done = false;
+    });
+    return done;
+  });
+
+  /* ---------- roadmap progress ---------- */
+  const roadmap = $(".roadmap");
+  if(roadmap){
+    viewportCbs.push(function(){
+      if(!inView(roadmap, 0.7)) return false;
+      const prog = $(".road-prog", roadmap);
+      if(prog) prog.style.width = "22%";
+      $$(".road-item", roadmap).forEach((it,i)=>{
+        if(it.classList.contains("lit")) setTimeout(()=>it.classList.add("node-on"), 200 + i*120);
+      });
+      return true;
+    });
+  }
+
+  /* ============================================================
+     HERO NETWORK CANVAS
+     ============================================================ */
+  function setupNetwork(canvas, opts){
+    if(!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W, H, dpr, nodes = [], edges = [], pulses = [];
+    const cfg = Object.assign({ count:40, verified:6, linkDist:0.22, speed:0.18, blue:"77,141,255", gold:"200,169,107" }, opts);
+
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const r = canvas.getBoundingClientRect();
+      W = r.width; H = r.height;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      build();
+    }
+    function build(){
+      nodes = [];
+      const n = Math.round(cfg.count * Math.min(1.1, Math.max(.55, W/520)));
+      for(let i=0;i<n;i++){
+        nodes.push({
+          x: Math.random()*W, y: Math.random()*H,
+          vx:(Math.random()-.5)*cfg.speed, vy:(Math.random()-.5)*cfg.speed,
+          r: Math.random()*1.6+1.1,
+          verified: i < cfg.verified,
+          hub: Math.random() < .12,
+          ph: Math.random()*Math.PI*2
+        });
+      }
+      nodes.forEach(nd=>{ if(nd.hub){ nd.r += 1.4; } });
+    }
+    function step(t){
+      const linkPx = cfg.linkDist * Math.min(W,H) * 1.6;
+      ctx.clearRect(0,0,W,H);
+      // edges
+      edges = [];
+      for(let i=0;i<nodes.length;i++){
+        const a = nodes[i];
+        a.x += a.vx; a.y += a.vy;
+        if(a.x<8||a.x>W-8) a.vx*=-1;
+        if(a.y<8||a.y>H-8) a.vy*=-1;
+        for(let j=i+1;j<nodes.length;j++){
+          const b = nodes[j];
+          const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
+          if(d < linkPx){
+            const op = (1 - d/linkPx) * 0.5;
+            const gold = a.verified && b.verified;
+            ctx.strokeStyle = `rgba(${gold?cfg.gold:cfg.blue},${op*(gold?.55:.4)})`;
+            ctx.lineWidth = gold ? 0.8 : 0.6;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+            edges.push([a,b]);
+          }
+        }
+      }
+      // pulses travelling on edges
+      if(!reduce && edges.length && Math.random() < 0.06 && pulses.length < 14){
+        const e = edges[(Math.random()*edges.length)|0];
+        pulses.push({ a:e[0], b:e[1], t:0, sp:0.012 + Math.random()*0.02 });
+      }
+      pulses = pulses.filter(p=>p.t < 1);
+      pulses.forEach(p=>{
+        p.t += p.sp;
+        const x = p.a.x + (p.b.x-p.a.x)*p.t;
+        const y = p.a.y + (p.b.y-p.a.y)*p.t;
+        const g = ctx.createRadialGradient(x,y,0,x,y,5);
+        g.addColorStop(0, `rgba(${cfg.blue},.9)`); g.addColorStop(1, `rgba(${cfg.blue},0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x,y,5,0,7); ctx.fill();
+      });
+      // nodes
+      nodes.forEach(nd=>{
+        const tw = reduce ? 1 : (0.7 + 0.3*Math.sin(t*0.002 + nd.ph));
+        const col = nd.verified ? cfg.gold : cfg.blue;
+        if(nd.hub || nd.verified){
+          const gr = ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,nd.r*5);
+          gr.addColorStop(0, `rgba(${col},${.4*tw})`); gr.addColorStop(1, `rgba(${col},0)`);
+          ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r*5,0,7); ctx.fill();
+        }
+        ctx.fillStyle = nd.verified ? `rgba(${cfg.gold},${.95})` : `rgba(${cfg.blue},${.85*tw+.1})`;
+        ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r,0,7); ctx.fill();
+        if(nd.verified){
+          ctx.strokeStyle = `rgba(${cfg.gold},${.5*tw})`; ctx.lineWidth=1;
+          ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r+3,0,7); ctx.stroke();
+        }
+      });
+      raf = requestAnimationFrame(step);
+    }
+    let raf;
+    resize();
+    window.addEventListener("resize", debounce(resize, 200));
+    if(reduce){ step(0); cancelAnimationFrame(raf); /* draw one frame */ }
+    else raf = requestAnimationFrame(step);
+  }
+
+  /* ============================================================
+     PRODUCT GRAPH CANVAS (denser, structured)
+     ============================================================ */
+  function setupGraph(canvas){
+    if(!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let W,H,dpr,nodes=[],raf;
+    function resize(){
+      dpr=Math.min(window.devicePixelRatio||1,2);
+      const r=canvas.getBoundingClientRect(); W=r.width; H=r.height;
+      canvas.width=W*dpr; canvas.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      build();
+    }
+    function build(){
+      nodes=[];
+      const cx=W/2, cy=H/2;
+      // central hub
+      nodes.push({x:cx,y:cy,r:5,core:true,ph:0});
+      // rings
+      const rings=[{c:7,rad:Math.min(W,H)*0.20,v:2},{c:12,rad:Math.min(W,H)*0.36,v:3}];
+      rings.forEach(ring=>{
+        for(let i=0;i<ring.c;i++){
+          const ang=(i/ring.c)*Math.PI*2 + Math.random()*0.4;
+          const rad=ring.rad*(0.85+Math.random()*0.3);
+          nodes.push({
+            x:cx+Math.cos(ang)*rad, y:cy+Math.sin(ang)*rad,
+            r:Math.random()*1.4+1.6, ph:Math.random()*7,
+            verified: Math.random()<0.28,
+            ang, rad, cx, cy, drift:(Math.random()-.5)*0.0008
+          });
+        }
+      });
+    }
+    function step(t){
+      ctx.clearRect(0,0,W,H);
+      const core=nodes[0];
+      // links to core + neighbours
+      for(let i=1;i<nodes.length;i++){
+        const a=nodes[i];
+        if(!reduce){ a.ang+=a.drift; a.x=a.cx+Math.cos(a.ang)*a.rad; a.y=a.cy+Math.sin(a.ang)*a.rad; }
+        const d=Math.hypot(a.x-core.x,a.y-core.y);
+        const op=Math.max(0,(1-d/(Math.min(W,H)*0.5)))*0.5;
+        ctx.strokeStyle=`rgba(77,141,255,${op*0.5})`; ctx.lineWidth=0.6;
+        ctx.beginPath(); ctx.moveTo(core.x,core.y); ctx.lineTo(a.x,a.y); ctx.stroke();
+      }
+      // neighbour links
+      for(let i=1;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+          const a=nodes[i],b=nodes[j]; const d=Math.hypot(a.x-b.x,a.y-b.y);
+          if(d<Math.min(W,H)*0.18){
+            ctx.strokeStyle=`rgba(255,255,255,${(1-d/(Math.min(W,H)*0.18))*0.08})`; ctx.lineWidth=0.5;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          }
+        }
+      }
+      nodes.forEach((nd,i)=>{
+        const tw=reduce?1:(0.6+0.4*Math.sin(t*0.002+nd.ph));
+        if(nd.core){
+          const g=ctx.createRadialGradient(nd.x,nd.y,0,nd.x,nd.y,18);
+          g.addColorStop(0,"rgba(77,141,255,.5)"); g.addColorStop(1,"rgba(77,141,255,0)");
+          ctx.fillStyle=g; ctx.beginPath(); ctx.arc(nd.x,nd.y,18,0,7); ctx.fill();
+          ctx.fillStyle="rgba(120,170,255,1)"; ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r,0,7); ctx.fill();
+          return;
+        }
+        const col=nd.verified?"200,169,107":"77,141,255";
+        ctx.fillStyle=`rgba(${col},${0.75*tw+0.15})`;
+        ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r,0,7); ctx.fill();
+        if(nd.verified){ ctx.strokeStyle=`rgba(200,169,107,${.45*tw})`; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(nd.x,nd.y,nd.r+2.5,0,7); ctx.stroke(); }
+      });
+      raf=requestAnimationFrame(step);
+    }
+    resize();
+    window.addEventListener("resize", debounce(resize,200));
+    if(reduce) step(0); else raf=requestAnimationFrame(step);
+  }
+
+  /* ============================================================
+     HERO TICKER (cycling agent lines)
+     ============================================================ */
+  function setupTicker(){
+    const feed = $(".viz-ticker .feed");
+    if(!feed) return;
+    const lines = [
+      "Agent Nova evaluating 240 suppliers — Singapore",
+      "Agent Delta requesting verification — Munich",
+      "Agent Sigma reviewing partnership — São Paulo",
+      "Agent Alpha analyzing procurement — Toronto",
+      "Agent Orion matching distribution — Dubai"
+    ];
+    let i=0;
+    const span = document.createElement("span");
+    feed.appendChild(span);
+    function cycle(){
+      span.classList.remove("on");
+      setTimeout(()=>{ span.textContent = lines[i % lines.length]; i++; span.classList.add("on"); }, 350);
+    }
+    cycle();
+    if(!reduce) setInterval(cycle, 3200);
+  }
+
+  /* ============================================================
+     PRODUCT AGENT + OPPORTUNITY STREAMS
+     ============================================================ */
+  const AGENTS = [
+    { av:"NV", name:"Agent Nova", act:"evaluating suppliers", st:"PROCUREMENT · 240 candidates" },
+    { av:"DL", name:"Agent Delta", act:"requesting verification", st:"TRUST LAYER · ownership check" },
+    { av:"SG", name:"Agent Sigma", act:"reviewing partnership opportunities", st:"STRATEGY · 18 matches" },
+    { av:"AL", name:"Agent Alpha", act:"analyzing procurement requests", st:"INTELLIGENCE · 5 regions" },
+    { av:"OR", name:"Agent Orion", act:"mapping distribution network", st:"LOGISTICS · 31 nodes" },
+    { av:"VG", name:"Agent Vega", act:"scoring counterparties", st:"RISK · realtime" }
+  ];
+  function setupAgentStream(){
+    const box = $("#agent-stream");
+    if(!box) return;
+    let k=0;
+    function add(){
+      const a = AGENTS[k % AGENTS.length]; k++;
+      const row = document.createElement("div");
+      row.className="agent-row";
+      row.innerHTML = `<div class="agent-av">${a.av}</div>
+        <div class="agent-tx"><b>${a.name}</b> ${a.act}<span class="st">${a.st}</span></div>
+        <div class="ago">now</div>`;
+      box.prepend(row);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>row.classList.add("in")));
+      $$(".agent-row", box).forEach((r,idx)=>{ const ago=$(".ago",r); if(idx>0&&ago) ago.textContent = idx*7 + "s"; });
+      while(box.children.length>4) box.removeChild(box.lastChild);
+    }
+    // seed
+    for(let s=0;s<3;s++) add();
+    if(!reduce){ box._iv = setInterval(add, 2600); }
+  }
+
+  function setupOppStream(){
+    const box=$("#opp-stream");
+    if(!box) return;
+    const data=[
+      ["Technology Partnership","AI infrastructure · cross-border","$4.2M"],
+      ["Manufacturing Request","Precision components · 12-mo","$1.8M"],
+      ["Healthcare Procurement","Diagnostics supply · verified","$3.6M"],
+      ["Distribution Inquiry","APAC logistics network","$920K"],
+      ["Investment Opportunity","Series A · enterprise AI","$15M"]
+    ];
+    data.forEach(d=>{
+      const row=document.createElement("div"); row.className="opp-row";
+      row.innerHTML=`<span class="od"></span><div class="ot">${d[0]}<span class="sub">${d[1]}</span></div><span class="val">${d[2]}</span>`;
+      box.appendChild(row);
+    });
+  }
+
+  /* ============================================================
+     MODAL
+     ============================================================ */
+  function setupModal(){
+    const back = $("#modal");
+    if(!back) return;
+    const titleEl=$("#modal-title"), subEl=$("#modal-sub"), eyebrowEl=$("#modal-eyebrow");
+    const form=$("#modal-form"), success=$("#modal-success");
+    const presets={
+      access:{ eb:"Early Access", t:"Join Early Access", s:"Request a place in the founding cohort. We onboard partners in small, curated waves." },
+      partner:{ eb:"Partnership", t:"Become a Partner", s:"Tell us how you'd like to build the AI-native business network with us." }
+    };
+    let lastFocus=null;
+    function open(kind){
+      const p=presets[kind]||presets.access;
+      eyebrowEl.textContent=p.eb; titleEl.textContent=p.t; subEl.textContent=p.s;
+      const sel=$("#f-interest"); if(sel) sel.value = kind==="partner" ? "Technology Partner" : "Founding Company";
+      form.style.display=""; success.classList.remove("on");
+      $$(".field",form).forEach(f=>f.classList.remove("err"));
+      back.classList.add("open"); lastFocus=document.activeElement;
+      requestAnimationFrame(()=>{ back.classList.add("show"); setTimeout(()=>$("#f-email")?.focus(),120); });
+      document.body.style.overflow="hidden";
+    }
+    function close(){
+      back.classList.remove("show");
+      setTimeout(()=>{ back.classList.remove("open"); document.body.style.overflow=""; lastFocus?.focus(); }, 280);
+    }
+    window.openModal = open;
+    $$("[data-modal]").forEach(b=>b.addEventListener("click",e=>{ e.preventDefault(); open(b.dataset.modal); }));
+    $$("[data-close]",back).forEach(b=>b.addEventListener("click",close));
+    back.addEventListener("click",e=>{ if(e.target===back) close(); });
+    document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&back.classList.contains("open")) close(); });
+
+    form.addEventListener("submit",e=>{
+      e.preventDefault();
+      const email=$("#f-email"), name=$("#f-name");
+      let ok=true;
+      const ef=email.closest(".field"), nf=name.closest(".field");
+      if(!name.value.trim()){ nf.classList.add("err"); ok=false; } else nf.classList.remove("err");
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())){ ef.classList.add("err"); ok=false; } else ef.classList.remove("err");
+      if(!ok) return;
+      form.style.display="none"; success.classList.add("on");
+    });
+  }
+
+  /* ---------- utils ---------- */
+  function debounce(fn,ms){ let t; return function(){ clearTimeout(t); t=setTimeout(()=>fn.apply(this,arguments),ms); }; }
+
+  /* ---------- init ---------- */
+  function init(){
+    setupNetwork($("#net-canvas"), { count:46, verified:7 });
+    setupGraph($("#graph-canvas"));
+    setupTicker();
+    setupAgentStream();
+    setupOppStream();
+    setupModal();
+    runViewportCbs();              // reveal in-viewport content immediately
+    // Layout shifts while fonts + canvases settle (the hero is vertically
+    // centered), so re-check on a short interval for the first few seconds.
+    let ticks = 0;
+    const settle = setInterval(()=>{ runViewportCbs(); if(++ticks >= 24) clearInterval(settle); }, 150);
+    // Hard safety net: never leave any content hidden, even if scroll
+    // events / observers / CSS animations are unreliable in this environment.
+    // Removing .js-anim drops the `.js-anim .reveal{opacity:0}` + animation
+    // rules entirely, so base `.reveal{opacity:1;transform:none}` wins — this
+    // defeats a frozen/non-advancing animation that inline styles cannot.
+    setTimeout(()=>{
+      reveals.forEach(el=>{
+        el.classList.add("in");
+        el.style.animation = "none";
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+      document.documentElement.classList.remove("js-anim");
+      counters.forEach(el=>{ if(!el._counted){ el._counted=true; animateCount(el); } });
+    }, 2000);
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
 </body>
 </html>
